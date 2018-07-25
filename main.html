@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>snowwolf</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="./plugins/layui/css/layui.css" media="all">
+    <script src="./js/jquery-3.0.0.js"></script>
+</head>
+
+<body>
+<form class="layui-form" action="">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">数据库</label>
+            <div class="layui-input-inline">
+                <select name="db" class="dbOption"  lay-verify="required" lay-search="" lay-filter="findDB">
+                    <option value="">直接选择或搜索选择</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">表名</label>
+            <div class="layui-input-inline">
+                <select class="tableOption" name="table" lay-verify="required" lay-search="" lay-filter="findTable">
+                    <option value="">直接选择或搜索选择</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">常用注解</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="like1[game]"  title="Id" checked="">
+            <input type="checkbox" name="like[game]" title="Table" checked="">
+            <input type="checkbox" name="like[game]" title="ApiModel" checked="">
+            <input type="checkbox" name="like1[write]"  title="ApiModelProperty" checked="">
+            <input type="checkbox" name="like1[read]"  title="Column" checked="">
+        </div>
+    </div>
+
+    <div class="layui-form-item" pane="">
+        <label class="layui-form-label">其他注解</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="like[read]" lay-skin="primary" title="Entity">
+            <input type="checkbox" name="like[write]" lay-skin="primary" title="Data">
+            <input type="checkbox" name="like1[game]" lay-skin="primary" title="NotNull">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">类保存路径</label>
+        <div class="layui-input-block">
+            <input type="text" name="path" lay-verify="path" autocomplete="off" placeholder="请输入保存路径" class="layui-input">
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">自定义类名</label>
+            <div class="layui-input-block">
+                <input type="checkbox" name="close" lay-skin="switch" lay-filter="switchEntity" lay-text="ON|OFF">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">自定义包头</label>
+            <div class="layui-input-block">
+                <input type="checkbox" name="close" lay-skin="switch" lay-filter="switchImport" lay-text="ON|OFF">
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item" id="classType">
+        <div id="entityName"  class="layui-hide">
+            <label class="layui-form-label">实体类名称</label>
+            <div class="layui-input-inline">
+                <input type="text" name="entityName" lay-verify="entityName" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div  class="layui-hide" id="importUrl">
+            <label class="layui-form-label">包头</label>
+            <div class="layui-input-inline">
+                <input type="text" name="importUrl" lay-verify="importUrl" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit="" lay-filter="demo2">确认</button>
+        </div>
+    </div>
+</form>
+
+<script src="./plugins/layui/layui.js"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+    layui.use(['form', 'layedit', 'laydate'], function() {
+        var form = layui.form,
+            layer = layui.layer,
+            layedit = layui.layedit,
+            laydate = layui.laydate;
+        layedit.build('LAY_demo_editor');
+        //获取端口
+        var port = window.location.port;
+        //查询出所有的库
+        $(document).ready(function(){
+            form.render();
+        });
+    });
+</script>
+
+</body>
+
+</html>
