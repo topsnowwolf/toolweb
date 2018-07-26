@@ -13,16 +13,21 @@
 
 <body>
 <div class="kit-doc">
+    <form class="layui-form layui-form-pane" action="">
+        <div class="layui-form-item"></div>
+    </form>
+    <div class="kit-doc-title"></div>
     <blockquote class="layui-elem-quote">
         为了方便开发，dtotool工具目前主要用于生成实体类。也是javabean对象。
     </blockquote>
     <div class="kit-doc-title">
         <fieldset>
             <legend><a name="blockquote">使用介绍</a></legend>
+            <p>提供两种方式(数据库表->javabean。 json->javabean。以下就是两种方式使用介绍</p>
         </fieldset>
     </div>
 
-    <p>提供两种方式(数据库表->javabean。 json->javabean。),以下两种方式使用介绍</p>
+
     <table class="layui-table">
         <colgroup>
             <col width="100">
@@ -33,13 +38,13 @@
             <td>数据库表->javabean</td>
             <td>
                 <pre class="layui-code">
-                    //data-url //跳转地址
-                    //data-icon //图标，支持layui图片和fa图标
-                    //data-title //标题
-                    //data-id //唯一id
+                    //选择数据库
+                    //选择表
+                    //选择注解标签
+                    //选择bean保存路径
                     Example:
                     <pre class="layui-code">
-                        data-url="form.html" data-icon="fa-user" data-title="表单" kit-target data-id='2' kit-target
+                        。。。。。。
                     </pre>
                 </pre>
             </td>
@@ -47,8 +52,9 @@
         <tr>
             <td>json->javabean</td>
             <td>
+                Example:
                 <pre class="layui-code">
-                    kit-target data-options="{url:'test.html',icon:'fa-user',title:'表格',id:'1'}"
+                    。。。。。。
                 </pre>
             </td>
         </tr>
