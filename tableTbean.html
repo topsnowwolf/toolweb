@@ -19,7 +19,6 @@
                 <div class="layui-input-inline">
                     <select name="db" class="dbOption"  lay-verify="required" lay-search="" lay-filter="findDB">
 					    <option value="">直接选择或搜索选择</option>
-                        <option value="test">test</option>
 					</select>
                 </div>
             </div>
@@ -28,7 +27,6 @@
                 <div class="layui-input-inline">
                     <select class="tableOption" name="table" lay-verify="required" lay-search="" lay-filter="findTable">
 					    <option value="">直接选择或搜索选择</option>
-                        <option value="test">test</option>
 					</select>
                 </div>
             </div>
@@ -120,7 +118,7 @@
 		var port = window.location.port;	
 		//查询出所有的库
 		$(document).ready(function(){
-			console.log("ready");
+			//console.log("ready");
 			var url = "http://localhost:"+port+"/dtoTool/db/findAllDB";
 			$.ajax({
 			  type: 'get',
@@ -142,7 +140,7 @@
 		//查询选择的数据库对应的表
 		form.on('select(findDB)', function(data){
 			var dbName = data.value;
-			console.log(dbName);
+			//console.log(dbName);
 			if (dbName =="") {
 				layer.msg('请选择数据库名称！');
 				return ;
@@ -187,7 +185,7 @@
 		});
 		
 		form.on('switch(switchImport)', function(data) {
-			console.log(this.checked);
+			//console.log(this.checked);
 			layer.msg('开关checked：' + (this.checked ? 'true' : 'false'), {
 				offset: '6px'
 			});
@@ -213,10 +211,17 @@
             params.push({"dbName":data.field.db,"tableName":data.field.table,"path":data.field.path,
                 "entityList":entityList,"propertyList":propertyList,"className":data.field.entityName,"packageName":data.field.importUrl});
             var jsonStr = JSON.stringify(params[0]);
-            layer.alert(jsonStr, {
-                title: '最终的提交信息'
-            })
-            return false;
+            console.log(jsonStr);
+            var url = "http://localhost:"+port+"/dtoTool/db/create";
+            $.ajax({
+                type: "POST",
+                url: url,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: jsonStr,
+                success: function (data,status) {
+                }
+            });
         });
 	});
 	</script>
