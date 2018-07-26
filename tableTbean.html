@@ -18,7 +18,8 @@
                 <label class="layui-form-label">数据库</label>
                 <div class="layui-input-inline">
                     <select name="db" class="dbOption"  lay-verify="required" lay-search="" lay-filter="findDB">
-					  <option value="">直接选择或搜索选择</option>
+					    <option value="">直接选择或搜索选择</option>
+                        <option value="test">test</option>
 					</select>
                 </div>
             </div>
@@ -26,7 +27,8 @@
                 <label class="layui-form-label">表名</label>
                 <div class="layui-input-inline">
                     <select class="tableOption" name="table" lay-verify="required" lay-search="" lay-filter="findTable">
-					  <option value="">直接选择或搜索选择</option>
+					    <option value="">直接选择或搜索选择</option>
+                        <option value="test">test</option>
 					</select>
                 </div>
             </div>
@@ -35,27 +37,27 @@
         <div class="layui-form-item">
             <label class="layui-form-label">常用注解</label>
             <div class="layui-input-block">
-                <input type="checkbox" name="like1[game]"  title="Id" checked="">
-                <input type="checkbox" name="like[game]" title="Table" checked="">
-				<input type="checkbox" name="like[game]" title="ApiModel" checked="">
-				<input type="checkbox" name="like1[write]"  title="ApiModelProperty" checked="">
-                <input type="checkbox" name="like1[read]"  title="Column" checked="">
+                <input type="checkbox" name="entityList"  value="Id" title="Id" checked="">
+                <input type="checkbox" name="entityList" value="Table" title="Table" checked="">
+				<input type="checkbox" name="entityList" value="ApiModel" title="ApiModel" checked="">
+				<input type="checkbox" name="entityList" value="ApiModelProperty" title="ApiModelProperty" checked="">
+                <input type="checkbox" name="entityList"  value="Column" title="Column" checked="">
             </div>
         </div>
 
         <div class="layui-form-item" pane="">
             <label class="layui-form-label">其他注解</label>
             <div class="layui-input-block">
-                <input type="checkbox" name="like[read]" lay-skin="primary" title="Entity">
-				<input type="checkbox" name="like[write]" lay-skin="primary" title="Data"> 
-				<input type="checkbox" name="like1[game]" lay-skin="primary" title="NotNull">
+                <input type="checkbox" name="propertyList" value="Entity" lay-skin="primary" title="Entity">
+				<input type="checkbox" name="propertyList" value="Data" lay-skin="primary" title="Data">
+				<input type="checkbox" name="propertyList" value="NotNull" lay-skin="primary" title="NotNull">
             </div>
         </div>
 		
 		<div class="layui-form-item">
             <label class="layui-form-label">类保存路径</label>
             <div class="layui-input-block">
-                <input type="text" name="path" lay-verify="path" autocomplete="off" placeholder="请输入保存路径" class="layui-input">
+                <input type="text" name="path" lay-verify="path" autocomplete="off"  placeholder="请输入保存路径" class="layui-input">
             </div>
         </div>
 		
@@ -91,7 +93,7 @@
         </div>
         <div class="layui-form-item">
 			<div class="layui-input-block">
-				<button class="layui-btn" lay-submit="" lay-filter="demo2">生成实体类</button>
+				<button class="layui-btn" lay-submit="" lay-filter="createBean">生成实体类</button>
 			</div>
         </div>
     </form>
@@ -105,6 +107,15 @@
 			layedit = layui.layedit,
 			laydate = layui.laydate;
 			layedit.build('LAY_demo_editor');
+
+        //自定义验证规则
+        form.verify({
+            path: function(value) {
+                if (value.length < 1) {
+                    return '必须输入实体类保存路径！';
+                }
+            }
+        });
 		//获取端口
 		var port = window.location.port;	
 		//查询出所有的库
@@ -188,8 +199,27 @@
 				$('#importUrl').attr('class','layui-hide');//替换成一个新class
 			}
 		});
+
+        form.on('submit(createBean)', function(data) {
+            var  params = [];
+            var entityList = [];
+            var propertyList = [];
+            $("input:checkbox[name='entityList']:checked").each(function(){
+                entityList.push($(this).val());
+            });
+            $("input:checkbox[name='propertyList']:checked").each(function(){
+                propertyList.push($(this).val());
+            });
+            params.push({"dbName":data.field.db,"tableName":data.field.table,"path":data.field.path,
+                "entityList":entityList,"propertyList":propertyList,"className":data.field.entityName,"packageName":data.field.importUrl});
+            var jsonStr = JSON.stringify(params[0]);
+            layer.alert(jsonStr, {
+                title: '最终的提交信息'
+            })
+            return false;
+        });
 	});
-	</script
+	</script>
 
 </body>
 
