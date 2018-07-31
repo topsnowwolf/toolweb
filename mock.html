@@ -8,206 +8,54 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="./plugins/layui/css/layui.css" media="all">
-	<script src="./js/jquery-3.0.0.js"></script>
+    <script src="./js/jquery-3.0.0.js"></script>
 </head>
 
 <body>
-    <form class="layui-form layui-form-pane" action="">
-        <div class="layui-form-item"></div>
-    </form>
-	<form class="layui-form" action="">
-        <div class="layui-inline">
-            <label class="layui-form-label">项目</label>
-            <div class="layui-input-inline">
-                <select name="projectId" class="projectOption"  lay-verify="required" lay-search="" lay-filter="projectId">
-                    <option value="">直接选择或搜索选择</option>
-                </select>
-            </div>
-        </div>
-        <div class="layui-inline">
-            <label class="layui-form-label">接口名称</label>
-            <div class="layui-input-inline">
-                <input type="text" name="implName" lay-verify="implName" autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-inline">
-            <label class="layui-form-label">接口url</label>
-            <div class="layui-input-inline">
-                <input type="text" name="implUrl" lay-verify="implUrl" autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-inline">
-            <div class="layui-input-block">
-                <button class="layui-btn layui-btn-radius" lay-submit="" lay-filter="queryMock">查询</button>
-            </div>
-        </div>
-
-    <div class="kit-doc-title">
-        <fieldset>
-            <legend><a name="blockquote">查询结果：</a></legend>
-        </fieldset>
+<form class="layui-form layui-form-pane" action="">
+    <div class="layui-form-item"></div>
+</form>
+<div class="layui-inline">
+    <label class="layui-form-label">项目</label>
+    <div class="layui-input-inline">
+        <select name="projectId" id="projectId" class="projectOption"  lay-verify="required" lay-search="" lay-filter="projectId">
+            <option value="">直接选择或搜索选择</option>
+        </select>
     </div>
-    <table class="layui-table">
-        <colgroup>
-            <col width="150">
-            <col width="200">
-            <col width="150">
-            <col>
-        </colgroup>
-        <thead>
-        <tr>
-            <th>接口名称</th>
-            <th>接口url</th>
-            <th>操作</th>
-        </tr>
-        </thead>
-        <tbody id="queryTbody">
-        </tbody>
-    </table>
-    </form>
-
-    <div class="kit-doc-title">
-        <fieldset>
-            <legend><a name="blockquote">mock接口：</a></legend>
-        </fieldset>
+</div>
+<div class="layui-inline">
+    <label class="layui-form-label">接口名称</label>
+    <div class="layui-input-inline">
+        <input type="text" name="implName" id="implName" lay-verify="implName" autocomplete="off" class="layui-input">
     </div>
-    <table class="layui-table">
-        <colgroup>
-            <col width="150">
-            <col width="200">
-            <col width="150">
-            <col>
-        </colgroup>
-        <thead>
-        <tr>
-            <th>入参</th>
-            <th>出参</th>
-        </tr>
-        </thead>
-        <tbody id="mockTbody">
-        <tr>
-            <td>
-                <table class="layui-table">
-                    <thead>
-                    <tr>
-                        <th>是否能为空</th>
-                        <th>类型</th>
-                        <th>名称</th>
-                        <th>描述</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>false</td>
-                        <td>STRING</td>
-                        <td>name</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>false</td>
-                        <td>STRING</td>
-                        <td>name</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>false</td>
-                        <td>STRING</td>
-                        <td>name</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>false</td>
-                        <td>STRING</td>
-                        <td>name</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>false</td>
-                        <td>STRING</td>
-                        <td>name</td>
-                        <td></td>
-                    </tr>
-                    </tbody>
-                </table>
-                <!--<p>{"notNull":"false","type":"STRING","name":"name","desc":"活动名称"}</p>-->
-                <!--<p>{"notNull":"false","type":"INT","name":"activityType","desc":"活动类型（1：领劵活动，2：留资活动,3:新闻资讯）"}</p>-->
-                <!--<p>{"notNull":"false","type":"DATE","name":"beginDate","desc":"创建开始时间"}</p>-->
-                <!--<p>{"notNull":"false","type":"DATE","name":"createTime","desc":"创建结束时间"}</p>-->
-                <!--<p>{"notNull":"false","type":"INT","name":"actStatus","desc":"状态（2 未开始 3进行中 4 已结束 5 强制下架，全部：不传）"}</p>-->
-                <!--<p>{"notNull":"false","type":"INT","name":"pageNum","desc":"当前页码数"}</p>-->
-                <!--<p>{"notNull":"false","type":"INT","name":"pageSize","desc":"每一页的记录数"}</p>-->
-                <!--<p>{"notNull":"true","type":"INT","name":"sourceType","desc":"活动来源（1：平台活动，2：经销商，3：平台经销商活动）"}</p>-->
-                <!--<p>{"notNull":"false","type":"LONG","name":"initiatorId","desc":"经销商id"}</p>-->
-            </td>
-            <td><a href="#options">options</a>/object</td>
-        </tr>
-        </tbody>
-    </table>
-    <table class="layui-table" lay-data="{height:315, url:'/demo/table/user/', page:true, id:'test'}" lay-filter="test">
-        <thead>
-        <tr>
-            <th lay-data="{field:'id', width:80, sort: true}">ID</th>
-            <th lay-data="{field:'username', width:80}">用户名</th>
-            <th lay-data="{field:'sex', width:80, sort: true}">性别</th>
-            <th lay-data="{field:'city'}">城市</th>
-            <th lay-data="{field:'sign'}">签名</th>
-            <th lay-data="{field:'experience', sort: true}">积分</th>
-            <th lay-data="{field:'score', sort: true}">评分</th>
-            <th lay-data="{field:'classify'}">职业</th>
-            <th lay-data="{field:'wealth', sort: true}">财富</th>
-        </tr>
-        </thead>
-    </table>
-    <form class="layui-form" action="">
-        <div class="layui-form-item">
-            <div class="layui-inline">
-                <label class="layui-form-label">类名</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="name" lay-verify="name"  class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline">
-                <label class="layui-form-label">包头</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="url" lay-verify="url"  class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline">
-                <label class="layui-form-label">是否使用Data注解</label>
-                <div class="layui-input-block">
-                    <input type="checkbox" name="close" lay-skin="switch" lay-filter="switchEntity" lay-text="ON|OFF">
-                </div>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">类保存路径</label>
-            <div class="layui-input-block">
-                <input type="text" name="path" lay-verify="path" autocomplete="off"  placeholder="请输入保存路径" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <div class="layui-inline">
-                <div class="layui-input-block">
-                    <button class="layui-btn layui-btn-radius layui-btn-sm layui-btn-normal" lay-submit="" lay-filter="inBean">入参创建bean</button>
-                    <button class="layui-btn layui-btn-radius layui-btn-sm" lay-submit="" lay-filter="outBean">出参创建bean</button>
-                    <button class="layui-btn layui-btn-radius layui-btn-sm" lay-submit="" lay-filter="test">test</button>
-                </div>
-            </div>
-        </div>
-    </form>
+</div>
+<div class="layui-inline">
+    <label class="layui-form-label">接口url</label>
+    <div class="layui-input-inline">
+        <input type="text" name="implUrl" id="implUrl" lay-verify="implUrl" autocomplete="off" class="layui-input">
+    </div>
+</div>
+<div class="layui-inline">
+    <div class="layui-input-block">
+        <button class="layui-btn" data-type="reload" id="queryMock">搜索</button>
+    </div>
+</div>
 
-    <script src="./plugins/layui/layui.js"></script>
-    <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
-    <script>
-	layui.use(['form', 'layedit', 'laydate'], function() {
-		var form = layui.form,
-			layer = layui.layer,
-			layedit = layui.layedit,
-			laydate = layui.laydate;
-			layedit.build('LAY_demo_editor');
-		//获取端口
-		var port = window.location.port;	
+<table class="layui-hide" id="mock_table" lay-filter="user"></table>
 
+
+<script src="./plugins/layui/layui.js"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+    layui.use(['form', 'layedit', 'laydate','table'], function() {
+        var form = layui.form,
+            table = layui.table,
+            layer = layui.layer,
+            layedit = layui.layedit,
+            laydate = layui.laydate;
+        layedit.build('LAY_demo_editor');
+        //获取端口
+        var port = window.location.port;
         //查询出所有的库
         $(document).ready(function(){
             //console.log("ready");
@@ -229,40 +77,44 @@
             });
         });
 
-        form.on('submit(queryMock)', function(data) {
 
-            var name = data.field.implName;
-            var url = data.field.implUrl;
-            var projectId = data.field.projectId;
-            //console.log(dbName);
-            if (name =="" && url == "") {
-                layer.msg('接口名和接口url不能同时为空');
-                return ;
+        var active = {
+            reload: function(){
+                var projectId = $('#projectId');
+                var implName = $('#implName');
+                var implUrl = $('#implUrl');
+                //执行重载
+                table.reload('testReload', {
+                    where: {
+                        projectId: projectId.val(),
+                        name: implName.val(),
+                        url: implUrl.val()
+                    }
+                });
             }
-            var url = "http://localhost:"+port+"/tool/mock/find?projectId="+projectId+"&url="+url+"&name="+name;
-            $.ajax({
-                type: 'get',
-                url: url, // ajax请求路径
-                dataType : "json",
-                success: function(data){
-                    var trStr = "";
-                    $.each(data.data,function(v,o){
-                        console.info(o);
-                        trStr += '<td>'+o.name+'</td><td>'+o.requestUrl+'</td>'+
-                        '<td><button class="layui-btn layui-btn-radius layui-btn-sm layui-btn-primary" lay-submit="" value="'+o.id+'" ' +
-                            'lay-filter="query">查看</button>' +
-                        ' <button class="layui-btn layui-btn-radius layui-btn-sm layui-btn-normal" lay-submit="" value="'+o.id+'"' +
-                            ' lay-filter="inBean">选定</button>' +
-                        ' </td>';
-                    });
-                    $('#queryTbody').append(trStr);
-                    form.render();
-                }
+        };
+        $('#queryMock').on('click', function(){
+            console.info("00");
+            url = "http://localhost:"+port+"/tool/mock/find?";
+            table.render({
+                elem: '#mock_table'
+                ,url: url
+                ,cols: [[
+                    {checkbox: true, fixed: true}
+                    ,{field:'id', title: 'ID',  sort: true, fixed: true}
+                    ,{field:'name', title: '名称', }
+                    ,{field:'requestUrl', title: 'url'}
+                ]]
+                ,id: 'testReload'
+                ,page: false
+                ,height: 315
             });
-            layer.msg('查询成功！');
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
         });
-	});
-	</script>
+    });
+</script>
+
 
 </body>
 

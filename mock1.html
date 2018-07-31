@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>snowwolf</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="./plugins/layui/css/layui.css" media="all">
+	<script src="./js/jquery-3.0.0.js"></script>
+</head>
+
+<body>
+    <form class="layui-form layui-form-pane" action="">
+        <div class="layui-form-item"></div>
+    </form>
+	<form class="layui-form" action="">
+        <div class="layui-inline">
+            <label class="layui-form-label">项目</label>
+            <div class="layui-input-inline">
+                <select name="projectId" class="projectOption"  lay-verify="required" lay-search="" lay-filter="projectId">
+                    <option value="">直接选择或搜索选择</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">接口名称</label>
+            <div class="layui-input-inline">
+                <input type="text" name="implName" lay-verify="implName" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">接口url</label>
+            <div class="layui-input-inline">
+                <input type="text" name="implUrl" lay-verify="implUrl" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-radius" lay-submit="" lay-filter="queryMock">查询</button>
+            </div>
+        </div>
+
+    <div class="kit-doc-title">
+        <fieldset>
+            <legend><a name="blockquote">查询结果：</a></legend>
+        </fieldset>
+        <div class="layui-inline">
+            <label class="layui-form-label">接口名称</label>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">接口url</label>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">操作</label>
+        </div>
+    </div>
+
+    </form>
+
+    <div class="kit-doc-title">
+        <fieldset>
+            <legend><a name="blockquote">mock接口：</a></legend>
+        </fieldset>
+    </div>
+
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">类名</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="name" lay-verify="name"  class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">包头</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="url" lay-verify="url"  class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">是否使用Data注解</label>
+                <div class="layui-input-block">
+                    <input type="checkbox" name="close" lay-skin="switch" lay-filter="switchEntity" lay-text="ON|OFF">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">类保存路径</label>
+            <div class="layui-input-block">
+                <input type="text" name="path" lay-verify="path" autocomplete="off"  placeholder="请输入保存路径" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-radius layui-btn-sm layui-btn-normal" lay-submit="" lay-filter="inBean">入参创建bean</button>
+                    <button class="layui-btn layui-btn-radius layui-btn-sm" lay-submit="" lay-filter="outBean">出参创建bean</button>
+                    <button class="layui-btn layui-btn-radius layui-btn-sm" lay-submit="" lay-filter="test">test</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <script src="./plugins/layui/layui.js"></script>
+    <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+    <script>
+	layui.use(['form', 'layedit', 'laydate'], function() {
+		var form = layui.form,
+			layer = layui.layer,
+			layedit = layui.layedit,
+			laydate = layui.laydate;
+			layedit.build('LAY_demo_editor');
+		//获取端口
+		var port = window.location.port;	
+
+        //查询出所有的库
+        $(document).ready(function(){
+            //console.log("ready");
+            var url = "http://localhost:"+port+"/tool/mock/project";
+            $.ajax({
+                type: 'get',
+                url: url, // ajax请求路径
+                dataType : "json",
+                success: function(data){
+                    $('.projectOption').empty();
+                    var option = '<option value="">直接选择或搜索选择</option>';
+                    $.each(data.data,function(v,o){
+                        //console.info(o.schemaName);
+                        option += '<option value="'+o.projectId+'" >'+o.projectName+'</option>';
+                    });
+                    $('.projectOption').append(option);
+                    form.render('select');
+                }
+            });
+        });
+
+        form.on('submit(queryMock)', function(data) {
+
+            var name = data.field.implName;
+            var url = data.field.implUrl;
+            var projectId = data.field.projectId;
+            //console.log(dbName);
+            if (name =="" && url == "") {
+                layer.msg('接口名和接口url不能同时为空');
+                return ;
+            }
+            var url = "http://localhost:"+port+"/tool/mock/find?projectId="+projectId+"&url="+url+"&name="+name;
+            $.ajax({
+                type: 'get',
+                url: url, // ajax请求路径
+                dataType : "json",
+                success: function(data){
+                    var trStr = "";
+                    $.each(data.data,function(v,o){
+                        console.info(o);
+                        trStr += '<td>'+o.name+'</td><td>'+o.requestUrl+'</td>'+
+                        '<td><button class="layui-btn layui-btn-radius layui-btn-sm layui-btn-primary" lay-submit="" value="'+o.id+'" ' +
+                            'lay-filter="query">查看</button>' +
+                        ' <button class="layui-btn layui-btn-radius layui-btn-sm layui-btn-normal" lay-submit="" value="'+o.id+'"' +
+                            ' lay-filter="inBean">选定</button>' +
+                        ' </td>';
+                    });
+                    $('#queryTbody').append(trStr);
+                    form.render();
+                }
+            });
+            layer.msg('查询成功！');
+        });
+	});
+	</script>
+
+</body>
+
+</html>
