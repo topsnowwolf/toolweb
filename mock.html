@@ -101,7 +101,7 @@
                 ,url: url
                 ,cols: [[
                     {checkbox: true, fixed: true}
-                    ,{field:'id', title: 'ID',  sort: true, fixed: true}
+                    ,{field:'id', title: 'ID',event: 'setSign', style:'cursor: pointer;', sort: true, fixed: true}
                     ,{field:'name', title: '名称', }
                     ,{field:'requestUrl', title: 'url'}
                 ]]
@@ -111,6 +111,28 @@
             });
             var type = $(this).data('type');
             active[type] ? active[type].call(this) : '';
+        });
+
+
+        //监听单元格事件
+        table.on('tool(user)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'setSign'){
+                layer.prompt({
+                    formType: 2
+                    ,title: '修改 ID 为 ['+ data.id +'] 的用户签名'
+                    ,value: data.sign
+                }, function(value, index){
+                    layer.close(index);
+
+                    //这里一般是发送修改的Ajax请求
+
+                    //同步更新表格和缓存对应的值
+                    obj.update({
+                        sign: value
+                    });
+                });
+            }
         });
     });
 </script>
