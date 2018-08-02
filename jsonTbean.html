@@ -17,15 +17,15 @@
         <li class="layui-this">JSON转Bean</li>
         <li>表转JSON</li>
     </ul>
-    <div class="layui-tab-item">JSON转Bean功能还在开发中</div>
     <div class="layui-tab-content">
-        <div class="layui-tab-item layui-show">
+        <div class="layui-tab-item layui-show">JSON转Bean功能还在开发中</div>
+        <div class="layui-tab-item">
             <form class="layui-form" action="">
                 <div class="layui-form-item">
                     <div class="layui-inline">
                         <label class="layui-form-label">数据库</label>
                         <div class="layui-input-inline">
-                            <select name="db" class="dbOption"  lay-verify="required" lay-search="" lay-filter="findDB">
+                            <select name="db" id="db" class="dbOption"  lay-verify="required" lay-search="" lay-filter="findDB">
                                 <option value="">直接选择或搜索选择</option>
                             </select>
                         </div>
@@ -33,78 +33,40 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">表名</label>
                         <div class="layui-input-inline">
-                            <select class="tableOption" name="table" lay-verify="required" lay-search="" lay-filter="findTable">
+                            <select class="tableOption" id="tbName" name="table" lay-verify="required" lay-search="" lay-filter="findTable">
                                 <option value="">直接选择或搜索选择</option>
                             </select>
                         </div>
                     </div>
                 </div>
-
-                <div class="layui-form-item">
-                    <label class="layui-form-label">常用注解</label>
-                    <div class="layui-input-block">
-                        <input type="checkbox" name="like1[game]"  title="Id" checked="">
-                        <input type="checkbox" name="like[game]" title="Table" checked="">
-                        <input type="checkbox" name="like[game]" title="ApiModel" checked="">
-                        <input type="checkbox" name="like1[write]"  title="ApiModelProperty" checked="">
-                        <input type="checkbox" name="like1[read]"  title="Column" checked="">
-                    </div>
-                </div>
-
                 <div class="layui-form-item" pane="">
-                    <label class="layui-form-label">其他注解</label>
-                    <div class="layui-input-block">
+                    <label class="layui-form-label">字段</label>
+                    <div class="layui-input-block" id="columInfo">
                         <input type="checkbox" name="like[read]" lay-skin="primary" title="Entity">
-                        <input type="checkbox" name="like[write]" lay-skin="primary" title="Data">
-                        <input type="checkbox" name="like1[game]" lay-skin="primary" title="NotNull">
                     </div>
                 </div>
 
-                <div class="layui-form-item">
-                    <label class="layui-form-label">类保存路径</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="path" lay-verify="path" lay-verify="required" autocomplete="off" placeholder="请输入保存路径" class="layui-input">
-                    </div>
-                </div>
-
-
-                <div class="layui-form-item">
-                    <div class="layui-inline">
-                        <label class="layui-form-label">自定义类名</label>
-                        <div class="layui-input-block">
-                            <input type="checkbox" name="close" lay-skin="switch" lay-filter="switchEntity" lay-text="ON|OFF">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">自定义包头</label>
-                        <div class="layui-input-block">
-                            <input type="checkbox" name="close" lay-skin="switch" lay-filter="switchImport" lay-text="ON|OFF">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="layui-form-item" id="classType">
-                    <div id="entityName"  class="layui-hide">
-                        <label class="layui-form-label">实体类名称</label>
-                        <div class="layui-input-inline">
-                            <input type="text" name="entityName" lay-verify="entityName" autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
-                    <div  class="layui-hide" id="importUrl">
-                        <label class="layui-form-label">包头</label>
-                        <div class="layui-input-inline">
-                            <input type="text" name="importUrl" lay-verify="importUrl" autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
-                </div>
                 <div class="layui-form-item">
                     <div class="layui-input-block">
-                        <button class="layui-btn" lay-submit="" lay-filter="createBean" >生成实体类</button>
+                        <button class="layui-btn" lay-submit="" lay-filter="changeTjson" >转化JSON</button>
+                        <button class="layui-btn" lay-submit="" lay-filter="getjson" >转化JSON（带注释）</button>
                     </div>
                 </div>
             </form>
+            <div class="kit-doc">
+                <div class="kit-doc-title">
+                    <fieldset>
+                        <legend><a name="blockquote">转化结果</a></legend>
+                        <div id="jsonRetult">
+
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
         </div>
+
     </div>
+
 </div>
 
 
@@ -167,45 +129,64 @@
             });
             layer.msg('查询数据库成功！');
         });
-
-
         form.on('select(findTable)', function(data){
-            layer.msg('查询表成功！');
-            //console.log(data);
-            //getListTable();
-        });
-
-        form.on('switch(switchEntity)', function(data) {
-            layer.msg('开关checked：' + (this.checked ? 'true' : 'false'), {
-                offset: '6px'
-            });
-            if(this.checked){
-                $('#entityName').removeClass('layui-hide');
-                $('#entityName').attr('class','layui-inline');//替换成一个新class
+            var dbName = $("#db").val();
+            console.info(dbName);
+            var tableName = data.value;
+            if (tableName =="") {
+                layer.msg('请选择选定表！');
+                return ;
             }else{
-                $('#entityName').removeClass('layui-inline');
-                $('#entityName').attr('class','layui-hide');//替换成一个新class
+                var url = "http://localhost:"+port+"/dtoTool/db/findColum?dbName="+dbName+"&tableName="+tableName;
+                $.ajax({
+                    type: 'get',
+                    url: url, // ajax请求路径
+                    dataType : "json",
+                    success: function(data,status){
+                        $('#columInfo').empty();
+                        var columInfo = '';
+                        $.each(data.list,function(v,o){
+                            columInfo += '<input type="checkbox" name="columName" value="'+o.columnName+'" lay-skin="primary" title="'+o.columnName+'">';
+                        });
+                        $('#columInfo').append(columInfo);
+                        form.render();
+                    }
+                });
+                layer.msg('查询表信息成功！');
             }
         });
 
-        form.on('switch(switchImport)', function(data) {
-            console.log(this.checked);
-            layer.msg('开关checked：' + (this.checked ? 'true' : 'false'), {
-                offset: '6px'
+        form.on('submit(changeTjson)', function(data) {
+            var  params = [];
+            var columName = [];
+            $("input:checkbox[name='columName']:checked").each(function(){
+                columName.push($(this).val());
             });
-            if(this.checked){
-                $('#importUrl').removeClass('layui-hide');
-                $('#importUrl').attr('class','layui-inline');//替换成一个新class
-            }else{
-                $('#importUrl').removeClass('layui-inline');
-                $('#importUrl').attr('class','layui-hide');//替换成一个新class
-            }
+            params.push({"dbName":data.field.db,"tableName":data.field.table,"colums":columName,"type":0});
+            var jsonStr = JSON.stringify(params[0]);
+            console.info(jsonStr);
+            layer.msg('转化成功！');
+            $('#jsonRetult').empty();
+            var retult = '<p>{</p>';
+            retult +='<pre><p>&#9;"resultCode": 0,</p></pre><pre><p>&#9;"resultMsg": "success",</p></pre><pre><p>&#9;"data": {}</p></pre><p>}</p>';
+            $('#jsonRetult').append(retult);
+            return false;
         });
 
-        form.on('submit(demo1)', function(data) {
-            layer.alert(JSON.stringify(data.field), {
-                title: '最终的提交信息'
-            })
+        form.on('submit(getjson)', function(data) {
+            var  params = [];
+            var columName = [];
+            $("input:checkbox[name='columName']:checked").each(function(){
+                columName.push($(this).val());
+            });
+            params.push({"dbName":data.field.db,"tableName":data.field.table,"colums":columName,"type":1});
+            var jsonStr = JSON.stringify(params[0]);
+            console.info(jsonStr);
+            $('#jsonRetult').empty();
+            var retult = '<p>{</p><pre><p>&#9;//编码</p></pre><pre><p>&#9;"resultCode": 0,</p></pre>';
+            retult +='<pre><p>&#9;//描述</p></pre><pre><p>&#9;"resultMsg": "success",</p></pre><pre><p>&#9;//结果</p></pre><pre><p>&#9;"data": {}</p></pre><p>}</p>';
+            $('#jsonRetult').append(retult);
+            layer.msg('转化成功！');
             return false;
         });
     });

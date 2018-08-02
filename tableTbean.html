@@ -169,9 +169,13 @@
 		
 		
 		form.on('select(findTable)', function(data){
-		  layer.msg('查询表成功！');
-		  //console.log(data);
-		  //getListTable();
+            var tableName = data.value;
+            if (tableName =="") {
+                layer.msg('请选择选定表！');
+                return ;
+            }else{
+                layer.msg('选定了表！');
+            }
 		});
 		
 		form.on('switch(switchEntity)', function(data) {
