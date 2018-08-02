@@ -8,29 +8,208 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="./plugins/layui/css/layui.css" media="all">
-	<script src="./js/jquery-3.0.0.js"></script>
+    <script src="./js/jquery-3.0.0.js"></script>
 </head>
 
 <body>
-	<form class="layui-form" action="">
-        功能暂时没有实现！等待！
-    </form>
+<div class="layui-tab">
+    <ul class="layui-tab-title">
+        <li class="layui-this">JSON转Bean</li>
+        <li>表转JSON</li>
+    </ul>
+    <div class="layui-tab-item">JSON转Bean功能还在开发中</div>
+    <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show">
+            <form class="layui-form" action="">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">数据库</label>
+                        <div class="layui-input-inline">
+                            <select name="db" class="dbOption"  lay-verify="required" lay-search="" lay-filter="findDB">
+                                <option value="">直接选择或搜索选择</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">表名</label>
+                        <div class="layui-input-inline">
+                            <select class="tableOption" name="table" lay-verify="required" lay-search="" lay-filter="findTable">
+                                <option value="">直接选择或搜索选择</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
 
-    <script src="./plugins/layui/layui.js"></script>
-    <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
-    <script>
-	layui.use(['form', 'layedit', 'laydate'], function() {
-		var form = layui.form,
-			layer = layui.layer,
-			layedit = layui.layedit,
-			laydate = layui.laydate;
-			layedit.build('LAY_demo_editor');
-		//获取端口
-		var port = window.location.port;	
-		//查询出所有的库
-		
-	});
-	</script
+                <div class="layui-form-item">
+                    <label class="layui-form-label">常用注解</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" name="like1[game]"  title="Id" checked="">
+                        <input type="checkbox" name="like[game]" title="Table" checked="">
+                        <input type="checkbox" name="like[game]" title="ApiModel" checked="">
+                        <input type="checkbox" name="like1[write]"  title="ApiModelProperty" checked="">
+                        <input type="checkbox" name="like1[read]"  title="Column" checked="">
+                    </div>
+                </div>
+
+                <div class="layui-form-item" pane="">
+                    <label class="layui-form-label">其他注解</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" name="like[read]" lay-skin="primary" title="Entity">
+                        <input type="checkbox" name="like[write]" lay-skin="primary" title="Data">
+                        <input type="checkbox" name="like1[game]" lay-skin="primary" title="NotNull">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">类保存路径</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="path" lay-verify="path" lay-verify="required" autocomplete="off" placeholder="请输入保存路径" class="layui-input">
+                    </div>
+                </div>
+
+
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">自定义类名</label>
+                        <div class="layui-input-block">
+                            <input type="checkbox" name="close" lay-skin="switch" lay-filter="switchEntity" lay-text="ON|OFF">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">自定义包头</label>
+                        <div class="layui-input-block">
+                            <input type="checkbox" name="close" lay-skin="switch" lay-filter="switchImport" lay-text="ON|OFF">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item" id="classType">
+                    <div id="entityName"  class="layui-hide">
+                        <label class="layui-form-label">实体类名称</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="entityName" lay-verify="entityName" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div  class="layui-hide" id="importUrl">
+                        <label class="layui-form-label">包头</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="importUrl" lay-verify="importUrl" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit="" lay-filter="createBean" >生成实体类</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script src="./plugins/layui/layui.js"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+    layui.use(['form','element', 'layedit', 'laydate'], function() {
+        var form = layui.form,
+            element = layui.element,
+            layer = layui.layer,
+            layedit = layui.layedit,
+            laydate = layui.laydate;
+        layedit.build('LAY_demo_editor');
+        //获取端口
+        var port = window.location.port;
+        //查询出所有的库
+        $(document).ready(function(){
+            console.log("ready");
+            var url = "http://localhost:"+port+"/dtoTool/db/findAllDB";
+            $.ajax({
+                type: 'get',
+                url: url, // ajax请求路径
+                dataType : "json",
+                success: function(data){
+                    $('.dbOption').empty();
+                    var option = '<option value="">直接选择或搜索选择</option>';
+                    $.each(data.list,function(v,o){
+                        //console.info(o.schemaName);
+                        option += '<option value="'+o.schemaName+'" >'+o.schemaName+'</option>';
+                    });
+                    $('.dbOption').append(option);
+                    form.render('select');
+                }
+            });
+        });
+
+        //查询选择的数据库对应的表
+        form.on('select(findDB)', function(data){
+            var dbName = data.value;
+            console.log(dbName);
+            if (dbName =="") {
+                layer.msg('请选择数据库名称！');
+                return ;
+            }
+            var url = "http://localhost:"+port+"/dtoTool/db/findTable?dbName="+dbName;
+            $.ajax({
+                type: 'get',
+                url: url, // ajax请求路径
+                dataType : "json",
+                success: function(data,status){
+                    $('.tableOption').empty();
+                    var option = '<option value="">直接选择或搜索选择</option>';
+                    $.each(data.list,function(v,o){
+                        //console.info(o.tableName);
+                        option += '<option value="'+o.tableName+'" >'+o.tableName+'</option>';
+                    });
+                    $('.tableOption').append(option);
+                    form.render('select');
+                }
+            });
+            layer.msg('查询数据库成功！');
+        });
+
+
+        form.on('select(findTable)', function(data){
+            layer.msg('查询表成功！');
+            //console.log(data);
+            //getListTable();
+        });
+
+        form.on('switch(switchEntity)', function(data) {
+            layer.msg('开关checked：' + (this.checked ? 'true' : 'false'), {
+                offset: '6px'
+            });
+            if(this.checked){
+                $('#entityName').removeClass('layui-hide');
+                $('#entityName').attr('class','layui-inline');//替换成一个新class
+            }else{
+                $('#entityName').removeClass('layui-inline');
+                $('#entityName').attr('class','layui-hide');//替换成一个新class
+            }
+        });
+
+        form.on('switch(switchImport)', function(data) {
+            console.log(this.checked);
+            layer.msg('开关checked：' + (this.checked ? 'true' : 'false'), {
+                offset: '6px'
+            });
+            if(this.checked){
+                $('#importUrl').removeClass('layui-hide');
+                $('#importUrl').attr('class','layui-inline');//替换成一个新class
+            }else{
+                $('#importUrl').removeClass('layui-inline');
+                $('#importUrl').attr('class','layui-hide');//替换成一个新class
+            }
+        });
+
+        form.on('submit(demo1)', function(data) {
+            layer.alert(JSON.stringify(data.field), {
+                title: '最终的提交信息'
+            })
+            return false;
+        });
+    });
+</script>
 
 </body>
 
