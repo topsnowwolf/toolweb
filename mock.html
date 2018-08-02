@@ -75,7 +75,7 @@
             </div>
         </div>
         <div class="layui-inline">
-            <label class="layui-form-label">是否使用Data注解</label>
+            <label class="layui-form-label">Data注解</label>
             <div class="layui-input-block">
                 <input type="checkbox"  name="close" lay-skin="switch" lay-filter="switchEntity" lay-text="ON|OFF">
                 <input type="text" style="display:none"  id="dataVal" name="dataVal" value="false" lay-verify="dataVal"  class="layui-input">
@@ -190,7 +190,7 @@
             }
         });
 
-        //创建bean提交
+        //创建bean提交  increate
         $('#inBean').on('click', function(){
             var mockId = $("#mockId").val();
             var className = $("#className").val();
@@ -199,6 +199,33 @@
             var classPath= $("#classPath").val();
             console.info(mockId);
             console.info(dataVal);
+            var fale = true;
+            if (classPath.length < 1) {
+                fale = false;
+                layer.msg('必须输入实体类保存路径！');
+            }
+            if (className.length < 1) {
+                fale = false;
+                layer.msg('类名不能为空！');
+            }
+
+            var url = "http://localhost:"+port+"/tool/mock/increate?id="+mockId+"&className="+className+"&packageName="+importUrl+"&type="+dataVal+"&classPath="+classPath;
+            if(fale){
+                $.ajax({
+                    type: 'get',
+                    url: url, // ajax请求路径
+                    dataType : "json",
+                    success: function (data,status) {
+                        console.log(data.msg);
+                        console.log(data.data);
+                        if("0000"==data.msg){
+                            layer.msg('生成实体类成功！');
+                        }else{
+                            layer.msg('生成实体类失败！');
+                        }
+                    }
+                });
+            }
         });
 
         $('#outBean').on('click', function(){
@@ -210,6 +237,35 @@
             console.info(mockId);
             console.info(dataVal);
             console.info(importUrl);
+            var fale = true;
+            if (classPath.length < 1) {
+                fale = false;
+                layer.msg('必须输入实体类保存路径！');
+                return;
+            }
+            if (className.length < 1) {
+                fale = false;
+                layer.msg('类名不能为空！');
+                return;
+            }
+
+            var url = "http://localhost:"+port+"/tool/mock/outcreate?id="+mockId+"&className="+className+"&packageName="+importUrl+"&type="+dataVal+"&classPath="+classPath;
+            if(fale){
+                $.ajax({
+                    type: 'get',
+                    url: url, // ajax请求路径
+                    dataType : "json",
+                    success: function (data,status) {
+                        console.log(data.msg);
+                        console.log(data.data);
+                        if("0000"==data.msg){
+                            layer.msg('生成实体类成功！');
+                        }else{
+                            layer.msg('生成实体类失败！');
+                        }
+                    }
+                });
+            }
         });
     });
 </script>
