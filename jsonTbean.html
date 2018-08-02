@@ -165,11 +165,29 @@
             params.push({"dbName":data.field.db,"tableName":data.field.table,"colums":columName,"type":0});
             var jsonStr = JSON.stringify(params[0]);
             console.info(jsonStr);
+            var url = "http://localhost:"+port+"/tool/json/change";
+            $.ajax({
+                type: "POST",
+                url: url,
+                contentType: "application/json",
+                dataType: "json",
+                data: jsonStr,
+                success: function (data,status) {
+                    $('#jsonRetult').empty();
+                    var retult = '<p>{</p>';
+                    $.each(data.data,function(v,o){
+                        console.info(v);
+                        if(v==data.data.length-1){
+                            retult += '<pre><p>&#9;"'+o.name+'": '+o.value+'</p></pre>';
+                        }else{
+                            retult += '<pre><p>&#9;"'+o.name+'": '+o.value+',</p></pre>';
+                        }
+                    });
+                    retult += '<p>}</p>';
+                    $('#jsonRetult').append(retult);
+                }
+            });
             layer.msg('转化成功！');
-            $('#jsonRetult').empty();
-            var retult = '<p>{</p>';
-            retult +='<pre><p>&#9;"resultCode": 0,</p></pre><pre><p>&#9;"resultMsg": "success",</p></pre><pre><p>&#9;"data": {}</p></pre><p>}</p>';
-            $('#jsonRetult').append(retult);
             return false;
         });
 
@@ -182,10 +200,30 @@
             params.push({"dbName":data.field.db,"tableName":data.field.table,"colums":columName,"type":1});
             var jsonStr = JSON.stringify(params[0]);
             console.info(jsonStr);
-            $('#jsonRetult').empty();
-            var retult = '<p>{</p><pre><p>&#9;//编码</p></pre><pre><p>&#9;"resultCode": 0,</p></pre>';
-            retult +='<pre><p>&#9;//描述</p></pre><pre><p>&#9;"resultMsg": "success",</p></pre><pre><p>&#9;//结果</p></pre><pre><p>&#9;"data": {}</p></pre><p>}</p>';
-            $('#jsonRetult').append(retult);
+            var url = "http://localhost:"+port+"/tool/json/change";
+            $.ajax({
+                type: "POST",
+                url: url,
+                contentType: "application/json",
+                dataType: "json",
+                data: jsonStr,
+                success: function (data,status) {
+                    $('#jsonRetult').empty();
+                    var retult = '<p>{</p>';
+                    $.each(data.data,function(v,o){
+                        console.info(v);
+                        if(v==data.data.length-1){
+                            retult +='<pre><p>&#9;//'+o.desc+'</p></pre>';
+                            retult +='<pre><p>&#9;"'+o.name+'": '+o.value+'</p></pre>';
+                        }else{
+                            retult +='<pre><p>&#9;//'+o.desc+'</p></pre>';
+                            retult +='<pre><p>&#9;"'+o.name+'": '+o.value+',</p></pre>';
+                        }
+                    });
+                    retult += '<p>}</p>';
+                    $('#jsonRetult').append(retult);
+                }
+            });
             layer.msg('转化成功！');
             return false;
         });
