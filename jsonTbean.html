@@ -85,7 +85,7 @@
         //查询出所有的库
         $(document).ready(function(){
             console.log("ready");
-            var url = "http://localhost:"+port+"/dtoTool/db/findAllDB";
+            var url = "http://localhost:"+port+"/tool/db/findAllDB";
             $.ajax({
                 type: 'get',
                 url: url, // ajax请求路径
@@ -111,7 +111,7 @@
                 layer.msg('请选择数据库名称！');
                 return ;
             }
-            var url = "http://localhost:"+port+"/dtoTool/db/findTable?dbName="+dbName;
+            var url = "http://localhost:"+port+"/tool/db/findTable?dbName="+dbName;
             $.ajax({
                 type: 'get',
                 url: url, // ajax请求路径
@@ -137,7 +137,7 @@
                 layer.msg('请选择选定表！');
                 return ;
             }else{
-                var url = "http://localhost:"+port+"/dtoTool/db/findColum?dbName="+dbName+"&tableName="+tableName;
+                var url = "http://localhost:"+port+"/tool/db/findColum?dbName="+dbName+"&tableName="+tableName;
                 $.ajax({
                     type: 'get',
                     url: url, // ajax请求路径
