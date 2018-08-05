@@ -18,15 +18,47 @@
     </form>
     <div class="kit-doc-title"></div>
     <blockquote class="layui-elem-quote">
-        为了方便开发，dtotool工具目前主要用于生成实体类。也是javabean对象。
+        为了方便开发，dtotool工具目前主要用于表，bean,json三者的相互转化。已经公司内部mock接口的转化。后续会新加service层sql的生成！
     </blockquote>
     <div class="kit-doc-title">
         <fieldset>
             <legend><a name="blockquote">使用介绍</a></legend>
-            <p>提供两种方式(数据库表->javabean。 json->javabean。以下就是两种方式使用介绍</p>
+            <p>表转bean:在表转实体类的菜单中</p>
+            <p>表转json:在JSON转实体类的菜单中</p>
+            <p>json转bean:在JSON转实体类的菜单中</p>
+            <p>公司内部mock接口的转化</p>
         </fieldset>
     </div>
 
+
+    <blockquote class="layui-elem-quote">
+        表转bean，规则配置
+    </blockquote>
+    <div class="kit-doc-title">
+        <fieldset>
+            <legend><a name="blockquote">注解配置</a></legend>
+            <p>表转bean时:工具定义了一些默认的注解，也可以自己定义注解</p>
+            <p>注意现在注解模板还没实现！例如：我自己定义了一个注解@WOLF(prifx="W",name="XXX"),注解括号的模板没有实现</p>
+        </fieldset>
+    </div>
+    <div class="kit-doc-title">
+        <fieldset>
+            <legend><a name="blockquote">bean继承和实现配置</a></legend>
+            <p>表转bean时:可以自己定义bean继承的类和实现的接口</p>
+        </fieldset>
+    </div>
+    <div class="kit-doc-title">
+        <fieldset>
+            <legend><a name="blockquote">剔除不需要的表字段</a></legend>
+            <p>表转bean时:可以自己定义表转bean不需要转的字段</p>
+        </fieldset>
+    </div>
+    <div class="kit-doc-title">
+        <fieldset>
+            <legend><a name="blockquote">设置bean名称模板和类头生成格式</a></legend>
+            <p>表转bean时:可以自己设置bean名称模板和类头生成格式</p>
+        </fieldset>
+    </div>
 
     <table class="layui-table">
         <colgroup>
@@ -35,7 +67,7 @@
         </colgroup>
         <tbody>
         <tr>
-            <td>数据库表->javabean</td>
+            <td>表->bean</td>
             <td>
                 <pre class="layui-code">
                     //选择数据库
@@ -50,7 +82,16 @@
             </td>
         </tr>
         <tr>
-            <td>json->javabean</td>
+            <td>表->json</td>
+            <td>
+                Example:
+                <pre class="layui-code">
+                    。。。。。。
+                </pre>
+            </td>
+        </tr>
+        <tr>
+            <td>json->bean</td>
             <td>
                 Example:
                 <pre class="layui-code">

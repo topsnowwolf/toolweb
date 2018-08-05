@@ -20,7 +20,7 @@
             <div class="layui-inline">
                 <label class="layui-form-label">数据库</label>
                 <div class="layui-input-inline">
-                    <select name="db" class="dbOption"  lay-verify="required" lay-search="" lay-filter="findDB">
+                    <select name="db" id="dbName" class="dbOption"  lay-verify="required" lay-search="" lay-filter="findDB">
 					    <option value="">直接选择或搜索选择</option>
 					</select>
                 </div>
@@ -28,7 +28,7 @@
             <div class="layui-inline">
                 <label class="layui-form-label">表名</label>
                 <div class="layui-input-inline">
-                    <select class="tableOption" name="table" lay-verify="required" lay-search="" lay-filter="findTable">
+                    <select class="tableOption" id="tbName" name="table" lay-verify="required" lay-search="" lay-filter="findTable">
 					    <option value="">直接选择或搜索选择</option>
 					</select>
                 </div>
@@ -36,8 +36,8 @@
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label">常用注解</label>
-            <div class="layui-input-block">
+            <label class="layui-form-label">bean注解</label>
+            <div class="layui-input-block" id="beanAnnotion">
                 <input type="checkbox" name="entityList"  value="Id" title="Id" checked="">
                 <input type="checkbox" name="entityList" value="Table" title="Table" checked="">
 				<input type="checkbox" name="entityList" value="ApiModel" title="ApiModel" checked="">
@@ -47,8 +47,8 @@
         </div>
 
         <div class="layui-form-item" pane="">
-            <label class="layui-form-label">其他注解</label>
-            <div class="layui-input-block">
+            <label class="layui-form-label">属性注解</label>
+            <div class="layui-input-block" id="propertyAnnotion">
                 <input type="checkbox" name="propertyList" value="Entity" lay-skin="primary" title="Entity">
 				<input type="checkbox" name="propertyList" value="Data" lay-skin="primary" title="Data">
 				<input type="checkbox" name="propertyList" value="NotNull" lay-skin="primary" title="NotNull">
@@ -58,7 +58,7 @@
 		<div class="layui-form-item">
             <label class="layui-form-label">类保存路径</label>
             <div class="layui-input-block">
-                <input type="text" name="path" lay-verify="path" autocomplete="off"  placeholder="请输入保存路径" class="layui-input">
+                <input type="text" id="path" name="path" lay-verify="path" autocomplete="off"  placeholder="请输入保存路径" class="layui-input">
             </div>
         </div>
 		
@@ -67,7 +67,7 @@
             <div class="layui-inline">
                 <label class="layui-form-label">自定义类名</label>
                 <div class="layui-input-block">
-					<input type="checkbox" name="close" lay-skin="switch" lay-filter="switchEntity" lay-text="ON|OFF">
+					<input type="checkbox"  name="close" lay-skin="switch" lay-filter="switchEntity" lay-text="ON|OFF">
 				</div>
             </div>
             <div class="layui-inline">
@@ -82,23 +82,25 @@
             <div id="entityName"  class="layui-hide">
                 <label class="layui-form-label">实体类名称</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="entityName" lay-verify="entityName" autocomplete="off" class="layui-input">
+                    <input type="text" id="className" name="entityName" lay-verify="entityName" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div  class="layui-hide" id="importUrl">
                 <label class="layui-form-label">包头</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="importUrl" lay-verify="importUrl" autocomplete="off" class="layui-input">
+                    <input type="text" id="ipUrl" name="importUrl" lay-verify="importUrl" autocomplete="off" class="layui-input">
                 </div>
             </div>
         </div>
-        <div class="layui-form-item">
-			<div class="layui-input-block">
-				<button class="layui-btn" lay-submit="" lay-filter="createBean">生成实体类</button>
-			</div>
-        </div>
-    </form>
 
+    </form>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="createBean">生成实体类</button>
+            </div>
+        </div>
+    </div>
     <script src="./plugins/layui/layui.js"></script>
     <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
     <script>
@@ -122,7 +124,32 @@
 		//查询出所有的库
 		$(document).ready(function(){
 			//console.log("ready");
-			var url = "http://localhost:"+port+"/tool/db/findAllDB";
+            var httpurl = "http://localhost:"+port+"/tool/db/tag";
+            $.ajax({
+                type: 'get',
+                url: httpurl, // ajax请求路径
+                dataType : "json",
+                success: function(data){
+                    $('#beanAnnotion').empty();
+                    $('#propertyAnnotion').empty();
+                    var beanAnnotion = '';
+                    var propertyAnnotion = '';
+                    $.each(data.data.entityList,function(v,o){
+                        //console.info(o.schemaName);
+                        beanAnnotion += '<input type="checkbox" name="entityList"  value="'+o+'" title="'+o+'" checked="">';
+                    });
+                    $.each(data.data.columList,function(v,o){
+                        //console.info(o.schemaName);
+                        propertyAnnotion += '<input type="checkbox" name="propertyList" value="'+o+'" lay-skin="primary" title="'+o+'">';
+                    });
+                    $('#beanAnnotion').append(beanAnnotion);
+                    $('#propertyAnnotion').append(propertyAnnotion);
+                    form.render();
+                }
+            });
+
+
+            var url = "http://localhost:"+port+"/tool/db/findAllDB";
 			$.ajax({
 			  type: 'get',
 			  url: url, // ajax请求路径
@@ -206,6 +233,11 @@
 		});
 
         form.on('submit(createBean)', function(data) {
+            var dbName = $("#dbName").val();
+            var tableName = $("#tbName").val();
+            var path = $("#path").val();
+            var className = $("#className").val();
+            var ipUrl = $("#ipUrl").val();
             var  params = [];
             var entityList = [];
             var propertyList = [];
@@ -215,8 +247,8 @@
             $("input:checkbox[name='propertyList']:checked").each(function(){
                 propertyList.push($(this).val());
             });
-            params.push({"dbName":data.field.db,"tableName":data.field.table,"path":data.field.path,
-                "entityList":entityList,"propertyList":propertyList,"className":data.field.entityName,"packageName":data.field.importUrl});
+            params.push({"dbName":dbName,"tableName":tableName,"path":path,
+                "entityList":entityList,"propertyList":propertyList,"className":className,"packageName":ipUrl});
             var jsonStr = JSON.stringify(params[0]);
             //console.log(jsonStr);
             var url = "http://localhost:"+port+"/tool/db/create";
@@ -227,14 +259,16 @@
                 dataType: "json",
                 data: jsonStr,
                 success: function (data,status) {
-                    console.log(data.msg);
-                    console.log(data.data);
-                    if("0000"==data.msg){
-                        layer.msg('生成实体类成功！');
+                    //console.log(data.msg);
+                    //console.log(data.data);
+                    if("SUCCESS"==data.msg){
+                        layer.msg(data.data+'生成实体类成功！');
                     }
                 }
             });
+            return false;
         });
+
 	});
 	</script>
 
