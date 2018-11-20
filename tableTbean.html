@@ -36,6 +36,15 @@
         </div>
 
         <div class="layui-form-item">
+            <label class="layui-form-label">Bean类型</label>
+            <div class="layui-input-block" id="beanType">
+                <input type="radio" name="beanType" value="Eo" title="Eo" checked="">
+                <input type="radio" name="beanType" value="Vo" title="Vo">
+                <input type="radio" name="beanType" value="Dto" title="Dto" >
+            </div>
+        </div>
+
+        <div class="layui-form-item">
             <label class="layui-form-label">bean注解</label>
             <div class="layui-input-block" id="beanAnnotion">
                 <input type="checkbox" name="entityList"  value="Id" title="Id" checked="">
@@ -241,13 +250,15 @@
             var  params = [];
             var entityList = [];
             var propertyList = [];
+            var beanType = $('#beanType input[name="beanType"]:checked ').val();
+            console.info(beanType);
             $("input:checkbox[name='entityList']:checked").each(function(){
                 entityList.push($(this).val());
             });
             $("input:checkbox[name='propertyList']:checked").each(function(){
                 propertyList.push($(this).val());
             });
-            params.push({"dbName":dbName,"tableName":tableName,"path":path,
+            params.push({"beanType":beanType,"dbName":dbName,"tableName":tableName,"path":path,
                 "entityList":entityList,"propertyList":propertyList,"className":className,"packageName":ipUrl});
             var jsonStr = JSON.stringify(params[0]);
             //console.log(jsonStr);
