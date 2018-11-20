@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>snowwolf</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="./plugins/layui/css/layui.css" media="all">
+	<script src="./js/jquery-3.0.0.js"></script>
+</head>
+
+<body>
+    <form class="layui-form layui-form-pane" action="">
+        <div class="layui-form-item"></div>
+    </form>
+	<form class="layui-form" action="">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">数据库</label>
+                <div class="layui-input-inline">
+                    <select name="db" id="dbName" class="dbOption"  lay-verify="required" lay-search="" lay-filter="findDB">
+					    <option value="">直接选择或搜索选择</option>
+					</select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">表名</label>
+                <div class="layui-input-inline">
+                    <select class="tableOption" id="tbName" name="table" lay-verify="required" lay-search="" lay-filter="findTable">
+					    <option value="">直接选择或搜索选择</option>
+					</select>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">Bean类型</label>
+            <div class="layui-input-block" id="beanType">
+                <input type="radio" name="beanType" value="Eo" title="Eo" checked="">
+                <input type="radio" name="beanType" value="Vo" title="Vo">
+                <input type="radio" name="beanType" value="Dto" title="Dto" >
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">bean注解</label>
+            <div class="layui-input-block" id="beanAnnotion">
+                <input type="checkbox" name="entityList"  value="Id" title="Id" checked="">
+                <input type="checkbox" name="entityList" value="Table" title="Table" checked="">
+				<input type="checkbox" name="entityList" value="ApiModel" title="ApiModel" checked="">
+				<input type="checkbox" name="entityList" value="ApiModelProperty" title="ApiModelProperty" checked="">
+                <input type="checkbox" name="entityList"  value="Column" title="Column" checked="">
+            </div>
+        </div>
+
+        <div class="layui-form-item" pane="">
+            <label class="layui-form-label">属性注解</label>
+            <div class="layui-input-block" id="propertyAnnotion">
+                <input type="checkbox" name="propertyList" value="Entity" lay-skin="primary" title="Entity">
+				<input type="checkbox" name="propertyList" value="Data" lay-skin="primary" title="Data">
+				<input type="checkbox" name="propertyList" value="NotNull" lay-skin="primary" title="NotNull">
+            </div>
+        </div>
+		
+		<div class="layui-form-item">
+            <label class="layui-form-label">类保存路径</label>
+            <div class="layui-input-block">
+                <input type="text" id="path" name="path" lay-verify="path" autocomplete="off"  placeholder="请输入保存路径" class="layui-input">
+            </div>
+        </div>
+		
+		
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">自定义类名</label>
+                <div class="layui-input-block">
+					<input type="checkbox"  name="close" lay-skin="switch" lay-filter="switchEntity" lay-text="ON|OFF">
+				</div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">自定义包头</label>
+                <div class="layui-input-block">
+					<input type="checkbox" name="close" lay-skin="switch" lay-filter="switchImport" lay-text="ON|OFF">
+				</div>
+            </div>
+        </div>
+		
+		<div class="layui-form-item" id="classType">
+            <div id="entityName"  class="layui-hide">
+                <label class="layui-form-label">实体类名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="className" name="entityName" lay-verify="entityName" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div  class="layui-hide" id="importUrl">
+                <label class="layui-form-label">包头</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="ipUrl" name="importUrl" lay-verify="importUrl" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+    </form>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="createBean">生成实体类</button>
+            </div>
+        </div>
+    </div>
+    <script src="./plugins/layui/layui.js"></script>
+    <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+    <script>
+	layui.use(['form', 'layedit', 'laydate'], function() {
+		var form = layui.form,
+			layer = layui.layer,
+			layedit = layui.layedit,
+			laydate = layui.laydate;
+			layedit.build('LAY_demo_editor');
+
+        //自定义验证规则
+        form.verify({
+            path: function(value) {
+                if (value.length < 1) {
+                    return '必须输入实体类保存路径！';
+                }
+            }
+        });
+		//获取端口
+		var port = window.location.port;	
+		//查询出所有的库
+		$(document).ready(function(){
+			//console.log("ready");
+            var httpurl = "http://localhost:"+port+"/tool/db/tag";
+            $.ajax({
+                type: 'get',
+                url: httpurl, // ajax请求路径
+                dataType : "json",
+                success: function(data){
+                    $('#beanAnnotion').empty();
+                    $('#propertyAnnotion').empty();
+                    var beanAnnotion = '';
+                    var propertyAnnotion = '';
+                    $.each(data.data.entityList,function(v,o){
+                        //console.info(o.schemaName);
+                        beanAnnotion += '<input type="checkbox" name="entityList"  value="'+o+'" title="'+o+'" checked="">';
+                    });
+                    $.each(data.data.columList,function(v,o){
+                        //console.info(o.schemaName);
+                        propertyAnnotion += '<input type="checkbox" name="propertyList" value="'+o+'" lay-skin="primary" title="'+o+'">';
+                    });
+                    $('#beanAnnotion').append(beanAnnotion);
+                    $('#propertyAnnotion').append(propertyAnnotion);
+                    form.render();
+                }
+            });
+
+
+            var url = "http://localhost:"+port+"/tool/db/findAllDB";
+			$.ajax({
+			  type: 'get',
+			  url: url, // ajax请求路径
+			  dataType : "json",
+			  success: function(data){
+				$('.dbOption').empty();
+				var option = '<option value="">直接选择或搜索选择</option>';
+				$.each(data.list,function(v,o){
+					//console.info(o.schemaName);
+					option += '<option value="'+o.schemaName+'" >'+o.schemaName+'</option>';
+				});
+				$('.dbOption').append(option);
+				form.render('select');
+			  }
+			}); 
+		});
+		
+		//查询选择的数据库对应的表
+		form.on('select(findDB)', function(data){
+			var dbName = data.value;
+			//console.log(dbName);
+			if (dbName =="") {
+				layer.msg('请选择数据库名称！');
+				return ;
+			}
+			var url = "http://localhost:"+port+"/tool/db/findTable?dbName="+dbName;
+			$.ajax({
+			  type: 'get',
+			  url: url, // ajax请求路径
+			  dataType : "json",
+			  success: function(data,status){
+				  $('.tableOption').empty();
+				  var option = '<option value="">直接选择或搜索选择</option>';
+				  $.each(data.list,function(v,o){
+						//console.info(o.tableName);
+						option += '<option value="'+o.tableName+'" >'+o.tableName+'</option>';
+				  });
+				  $('.tableOption').append(option);
+				  form.render('select');
+			  }
+		  });
+		  layer.msg('查询数据库成功！');
+		});
+		
+		
+		form.on('select(findTable)', function(data){
+            var tableName = data.value;
+            if (tableName =="") {
+                layer.msg('请选择选定表！');
+                return ;
+            }else{
+                layer.msg('选定了表！');
+            }
+		});
+		
+		form.on('switch(switchEntity)', function(data) {
+			layer.msg('开关checked：' + (this.checked ? 'true' : 'false'), {
+				offset: '6px'
+			});
+			if(this.checked){
+				$('#entityName').removeClass('layui-hide');
+				$('#entityName').attr('class','layui-inline');//替换成一个新class
+			}else{
+				$('#entityName').removeClass('layui-inline');
+				$('#entityName').attr('class','layui-hide');//替换成一个新class
+			}
+		});
+		
+		form.on('switch(switchImport)', function(data) {
+			//console.log(this.checked);
+			layer.msg('开关checked：' + (this.checked ? 'true' : 'false'), {
+				offset: '6px'
+			});
+			if(this.checked){
+				$('#importUrl').removeClass('layui-hide');
+				$('#importUrl').attr('class','layui-inline');//替换成一个新class
+			}else{
+				$('#importUrl').removeClass('layui-inline');
+				$('#importUrl').attr('class','layui-hide');//替换成一个新class
+			}
+		});
+
+        form.on('submit(createBean)', function(data) {
+            var dbName = $("#dbName").val();
+            var tableName = $("#tbName").val();
+            var path = $("#path").val();
+            var className = $("#className").val();
+            var ipUrl = $("#ipUrl").val();
+            var  params = [];
+            var entityList = [];
+            var propertyList = [];
+            var beanType = $('#beanType input[name="beanType"]:checked ').val();
+            console.info(beanType);
+            $("input:checkbox[name='entityList']:checked").each(function(){
+                entityList.push($(this).val());
+            });
+            $("input:checkbox[name='propertyList']:checked").each(function(){
+                propertyList.push($(this).val());
+            });
+            params.push({"beanType":beanType,"dbName":dbName,"tableName":tableName,"path":path,
+                "entityList":entityList,"propertyList":propertyList,"className":className,"packageName":ipUrl});
+            var jsonStr = JSON.stringify(params[0]);
+            //console.log(jsonStr);
+            var url = "http://localhost:"+port+"/tool/db/create";
+            $.ajax({
+                type: "POST",
+                url: url,
+                contentType: "application/json",
+                dataType: "json",
+                data: jsonStr,
+                success: function (data,status) {
+                    //console.log(data.msg);
+                    //console.log(data.data);
+                    if("SUCCESS"==data.msg){
+                        layer.msg(data.data+'生成实体类成功！');
+                    }
+                }
+            });
+            return false;
+        });
+
+	});
+	</script>
+
+</body>
+
+</html>

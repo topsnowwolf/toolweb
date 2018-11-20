@@ -12,109 +12,208 @@
 </head>
 
 <body>
-    <form class="layui-form layui-form-pane" action="">
-        <div class="layui-form-item"></div>
-    </form>
-	<form class="layui-form" action="">
-        <div class="layui-form-item">
-            <div class="layui-inline">
-                <label class="layui-form-label">数据库</label>
-                <div class="layui-input-inline">
-                    <select name="db" id="dbName" class="dbOption"  lay-verify="required" lay-search="" lay-filter="findDB">
-					    <option value="">直接选择或搜索选择</option>
-					</select>
+    <div class="layui-tab">
+        <ul class="layui-tab-title">
+            <li class="layui-this">单表转Bean</li>
+            <li>多表转Bean</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item"></div>
+                </form>
+                <form class="layui-form" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">数据库</label>
+                            <div class="layui-input-inline">
+                                <select name="db" id="dbName" class="dbOption"  lay-verify="required" lay-search="" lay-filter="findDB">
+                                    <option value="">直接选择或搜索选择</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">表名</label>
+                            <div class="layui-input-inline">
+                                <select class="tableOption" id="tbName" name="table" lay-verify="required" lay-search="" lay-filter="findTable">
+                                    <option value="">直接选择或搜索选择</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">Bean类型</label>
+                        <div class="layui-input-block" id="beanType">
+                            <input type="radio" name="beanType" value="Eo" title="Eo" checked="">
+                            <input type="radio" name="beanType" value="Vo" title="Vo">
+                            <input type="radio" name="beanType" value="Dto" title="Dto" >
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">bean注解</label>
+                        <div class="layui-input-block" id="beanAnnotion">
+                            <input type="checkbox" name="entityList"  value="Id" title="Id" checked="">
+                            <input type="checkbox" name="entityList" value="Table" title="Table" checked="">
+                            <input type="checkbox" name="entityList" value="ApiModel" title="ApiModel" checked="">
+                            <input type="checkbox" name="entityList" value="ApiModelProperty" title="ApiModelProperty" checked="">
+                            <input type="checkbox" name="entityList"  value="Column" title="Column" checked="">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item" pane="">
+                        <label class="layui-form-label">属性注解</label>
+                        <div class="layui-input-block" id="propertyAnnotion">
+                            <input type="checkbox" name="propertyList" value="Entity" lay-skin="primary" title="Entity">
+                            <input type="checkbox" name="propertyList" value="Data" lay-skin="primary" title="Data">
+                            <input type="checkbox" name="propertyList" value="NotNull" lay-skin="primary" title="NotNull">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">类保存路径</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="path" name="path" lay-verify="path" autocomplete="off"  placeholder="请输入保存路径" class="layui-input">
+                        </div>
+                    </div>
+
+
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">自定义类名</label>
+                            <div class="layui-input-block">
+                                <input type="checkbox"  name="close" lay-skin="switch" lay-filter="switchEntity" lay-text="ON|OFF">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">自定义包头</label>
+                            <div class="layui-input-block">
+                                <input type="checkbox" name="close" lay-skin="switch" lay-filter="switchImport" lay-text="ON|OFF">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item" id="classType">
+                        <div id="entityName"  class="layui-hide">
+                            <label class="layui-form-label">实体类名称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="className" name="entityName" lay-verify="entityName" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div  class="layui-hide" id="importUrl">
+                            <label class="layui-form-label">包头</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="ipUrl" name="importUrl" lay-verify="importUrl" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" lay-submit="" lay-filter="createBean">生成实体类</button>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="layui-inline">
-                <label class="layui-form-label">表名</label>
-                <div class="layui-input-inline">
-                    <select class="tableOption" id="tbName" name="table" lay-verify="required" lay-search="" lay-filter="findTable">
-					    <option value="">直接选择或搜索选择</option>
-					</select>
+
+            <!--tab tow-->
+            <div class="layui-tab-item">多表转Bean功能还在开发中!!!
+                <form class="layui-form" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">数据库</label>
+                            <div class="layui-input-inline">
+                                <select name="more_db" id="more_dbName" class="more_dbOption"  lay-verify="required" lay-search="" lay-filter="more_findDB">
+                                    <option value="">直接选择或搜索选择</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">表名</label>
+                            <div class="layui-input-inline">
+                                <select class="tableOption" id="more_tbName" name="more_table" lay-verify="required" lay-search="" lay-filter="more_findTable">
+                                    <option value="">直接选择或搜索选择</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item" pane="">
+                        <label class="layui-form-label">字段</label>
+                        <div class="layui-input-block" id="more_columInfo">
+                            <input type="checkbox" name="like[read]" lay-skin="primary" title="more_Entity">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">Bean类型</label>
+                        <div class="layui-input-block" id="more_beanType">
+                            <input type="radio" name="more_beanType" value="Vo" title="Vo" checked="">
+                            <input type="radio" name="more_beanType" value="Dto" title="Dto" >
+                        </div>
+                    </div>
+
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">类保存路径</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="more_path" name="more_path" lay-verify="more_path" autocomplete="off"  placeholder="请输入保存路径" class="layui-input">
+                        </div>
+                    </div>
+
+
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">自定义类名</label>
+                            <div class="layui-input-block">
+                                <input type="checkbox"  name="close" lay-skin="switch" lay-filter="more_switchEntity" lay-text="ON|OFF">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">自定义包头</label>
+                            <div class="layui-input-block">
+                                <input type="checkbox" name="close" lay-skin="switch" lay-filter="more_switchImport" lay-text="ON|OFF">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item" id="more_classType">
+                        <div id="more_entityName"  class="layui-hide">
+                            <label class="layui-form-label">实体类名称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="more_className" name="more_entityName" lay-verify="more_entityName" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div  class="layui-hide" id="more_importUrl">
+                            <label class="layui-form-label">包头</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="more_ipUrl" name="more_importUrl" lay-verify="more_importUrl" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" lay-submit="" lay-filter="more_createBean">生成实体类</button>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
 
-        <div class="layui-form-item">
-            <label class="layui-form-label">Bean类型</label>
-            <div class="layui-input-block" id="beanType">
-                <input type="radio" name="beanType" value="Eo" title="Eo" checked="">
-                <input type="radio" name="beanType" value="Vo" title="Vo">
-                <input type="radio" name="beanType" value="Dto" title="Dto" >
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <label class="layui-form-label">bean注解</label>
-            <div class="layui-input-block" id="beanAnnotion">
-                <input type="checkbox" name="entityList"  value="Id" title="Id" checked="">
-                <input type="checkbox" name="entityList" value="Table" title="Table" checked="">
-				<input type="checkbox" name="entityList" value="ApiModel" title="ApiModel" checked="">
-				<input type="checkbox" name="entityList" value="ApiModelProperty" title="ApiModelProperty" checked="">
-                <input type="checkbox" name="entityList"  value="Column" title="Column" checked="">
-            </div>
-        </div>
-
-        <div class="layui-form-item" pane="">
-            <label class="layui-form-label">属性注解</label>
-            <div class="layui-input-block" id="propertyAnnotion">
-                <input type="checkbox" name="propertyList" value="Entity" lay-skin="primary" title="Entity">
-				<input type="checkbox" name="propertyList" value="Data" lay-skin="primary" title="Data">
-				<input type="checkbox" name="propertyList" value="NotNull" lay-skin="primary" title="NotNull">
-            </div>
-        </div>
-		
-		<div class="layui-form-item">
-            <label class="layui-form-label">类保存路径</label>
-            <div class="layui-input-block">
-                <input type="text" id="path" name="path" lay-verify="path" autocomplete="off"  placeholder="请输入保存路径" class="layui-input">
-            </div>
-        </div>
-		
-		
-        <div class="layui-form-item">
-            <div class="layui-inline">
-                <label class="layui-form-label">自定义类名</label>
-                <div class="layui-input-block">
-					<input type="checkbox"  name="close" lay-skin="switch" lay-filter="switchEntity" lay-text="ON|OFF">
-				</div>
-            </div>
-            <div class="layui-inline">
-                <label class="layui-form-label">自定义包头</label>
-                <div class="layui-input-block">
-					<input type="checkbox" name="close" lay-skin="switch" lay-filter="switchImport" lay-text="ON|OFF">
-				</div>
-            </div>
-        </div>
-		
-		<div class="layui-form-item" id="classType">
-            <div id="entityName"  class="layui-hide">
-                <label class="layui-form-label">实体类名称</label>
-                <div class="layui-input-inline">
-                    <input type="text" id="className" name="entityName" lay-verify="entityName" autocomplete="off" class="layui-input">
-                </div>
-            </div>
-            <div  class="layui-hide" id="importUrl">
-                <label class="layui-form-label">包头</label>
-                <div class="layui-input-inline">
-                    <input type="text" id="ipUrl" name="importUrl" lay-verify="importUrl" autocomplete="off" class="layui-input">
-                </div>
-            </div>
-        </div>
-
-    </form>
-    <div class="layui-form-item">
-        <div class="layui-inline">
-            <div class="layui-input-block">
-                <button class="layui-btn" lay-submit="" lay-filter="createBean">生成实体类</button>
             </div>
         </div>
     </div>
+
     <script src="./plugins/layui/layui.js"></script>
     <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
     <script>
-	layui.use(['form', 'layedit', 'laydate'], function() {
+	layui.use(['form', 'element', 'layedit', 'laydate'], function() {
 		var form = layui.form,
+            element = layui.element,
 			layer = layui.layer,
 			layedit = layui.layedit,
 			laydate = layui.laydate;
