@@ -134,7 +134,7 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">表名</label>
                             <div class="layui-input-inline">
-                                <select class="tableOption" id="more_tbName" name="more_table" lay-verify="required" lay-search="" lay-filter="more_findTable">
+                                <select class="more_tableOption" id="more_tbName" name="more_table" lay-verify="required" lay-search="" lay-filter="more_findTable">
                                     <option value="">直接选择或搜索选择</option>
                                 </select>
                             </div>
@@ -270,6 +270,10 @@
 					option += '<option value="'+o.schemaName+'" >'+o.schemaName+'</option>';
 				});
 				$('.dbOption').append(option);
+
+                //多表的时候
+                $('.more_dbOption').empty();
+                $('.more_dbOption').append(option);
 				form.render('select');
 			  }
 			}); 
@@ -377,6 +381,35 @@
                 }
             });
             return false;
+        });
+
+
+        //多表的JS
+        //查询选择的数据库对应的表
+        form.on('select(more_findDB)', function(data){
+            var dbName = data.value;
+            console.log(dbName);
+            if (dbName =="") {
+                layer.msg('请选择数据库名称！');
+                return ;
+            }
+            var url = "http://localhost:"+port+"/tool/db/findTable?dbName="+dbName;
+            $.ajax({
+                type: 'get',
+                url: url, // ajax请求路径
+                dataType : "json",
+                success: function(data,status){
+                    $('.more_tableOption').empty();
+                    var option = '<option value="">直接选择或搜索选择</option>';
+                    $.each(data.list,function(v,o){
+                        //console.info(o.tableName);
+                        option += '<option value="'+o.tableName+'" >'+o.tableName+'</option>';
+                    });
+                    $('.more_tableOption').append(option);
+                    form.render('select');
+                }
+            });
+            layer.msg('查询数据库成功！');
         });
 
 	});
